@@ -546,8 +546,8 @@ function resetSquare() {
 
 function setTranslate() {
     matrix = [
-        [1, 0, 80],
-        [0, 1, 40],
+        [1, 0, 10],
+        [0, 1, 5],
         [0, 0, 1]
     ];
     updateInputs();
@@ -612,8 +612,8 @@ function setRotateTranslate() {
     const sin = Math.sin(angleRad);
     
     matrix = [
-        [cos, -sin, 80],
-        [sin,  cos, 40],
+        [cos, -sin, 10],
+        [sin,  cos, 5],
         [0,    0,   1]
     ];
     updateInputs();
