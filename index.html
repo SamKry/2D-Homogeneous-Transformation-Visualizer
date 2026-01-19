@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Homogeneous Transformation Visualizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <h1>2D Transformation Visualizer</h1>
+
+            <!-- Matrix Input -->
+            <div class="matrix-section">
+                <h2>Transformation Matrix M</h2>
+                <p class="formula">P' = M · P</p>
+                <div class="size-control">
+                    <div class="size-input-group">
+                        <label for="square-size-x">Width (x):</label>
+                        <input type="number" id="square-size-x" value="5" min="0.1" step="1">
+                    </div>
+                    <div class="size-input-group">
+                        <label for="square-size-y">Height (y):</label>
+                        <input type="number" id="square-size-y" value="5" min="0.1" step="1">
+                    </div>
+                    <span class="size-info">Rectangle from (0,0) to (x, y)</span>
+                </div>
+                <div class="matrix-grid">
+                    <div class="matrix-bracket left">[</div>
+                    <div class="matrix-inputs">
+                        <input type="text" id="m00" class="matrix-input" data-row="0" data-col="0" value="1">
+                        <input type="text" id="m01" class="matrix-input" data-row="0" data-col="1" value="0">
+                        <input type="text" id="m02" class="matrix-input" data-row="0" data-col="2" value="0">
+
+                        <input type="text" id="m10" class="matrix-input" data-row="1" data-col="0" value="0">
+                        <input type="text" id="m11" class="matrix-input" data-row="1" data-col="1" value="1">
+                        <input type="text" id="m12" class="matrix-input" data-row="1" data-col="2" value="0">
+
+                        <input type="text" id="m20" class="matrix-input" data-row="2" data-col="0" value="0">
+                        <input type="text" id="m21" class="matrix-input" data-row="2" data-col="1" value="0">
+                        <input type="text" id="m22" class="matrix-input" data-row="2" data-col="2" value="1">
+                    </div>
+                    <div class="matrix-bracket right">]</div>
+                </div>
+                <div class="matrix-labels">
+                    <p><strong>Top-left 2×2:</strong> Linear transformation (rotation, scale, shear)</p>
+                    <p><strong>m02, m12:</strong> Translation (x, y offset)</p>
+                    <p><strong>Bottom row:</strong> Projective effects (keep 0,0,1 for affine)</p>
+                    <p><strong>💡 Tip:</strong> Enter math expressions like "2+3", "50*1.5", "Math.cos(30*Math.PI/180)"
+                    </p>
+                </div>
+                <div id="projective-warning" class="warning hidden">
+                    ⚠️ Non-affine matrix detected (projective transformation)
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-section">
+                <h3>Quick Actions</h3>
+                <button id="btn-identity" class="btn">Identity</button>
+                <button id="btn-reset" class="btn">Reset Square</button>
+                <button id="btn-autofit" class="btn">Auto-Fit View</button>
+
+                <h3>Examples</h3>
+                <button id="btn-translate" class="btn btn-example">Translate</button>
+                <button id="btn-rotate" class="btn btn-example">Rotate 30°</button>
+                <button id="btn-scale" class="btn btn-example">Scale</button>
+                <button id="btn-rotate-scale" class="btn btn-example">Rotate + Scale</button>
+                <button id="btn-combo" class="btn btn-example">Rotate + Translate</button>
+            </div>
+
+            <!-- Coordinates Display -->
+            <div class="coords-section">
+                <h3>Corner Coordinates</h3>
+                <div id="coords-display"></div>
+            </div>
+
+            <!-- Help Section -->
+            <details class="help-section">
+                <summary><strong>Help & Math Reference</strong></summary>
+                <div class="help-content">
+                    <h4>Coordinate System</h4>
+                    <p>Uses homogeneous coordinates with column vectors: P = (x, y, 1)ᵀ</p>
+                    <p>Transformation: P' = M · P</p>
+
+                    <h4>Matrix Components</h4>
+                    <ul>
+                        <li><strong>m00, m01, m10, m11:</strong> Linear transformation (2×2 block)
+                            <ul>
+                                <li>Identity: [1,0; 0,1] (no change)</li>
+                                <li>Rotation θ: [cos(θ), -sin(θ); sin(θ), cos(θ)]</li>
+                                <li>Scale: [sx, 0; 0, sy]</li>
+                            </ul>
+                        </li>
+                        <li><strong>m02, m12:</strong> Translation (tx, ty)</li>
+                        <li><strong>m20, m21, m22:</strong> Projective terms (keep 0, 0, 1 for affine)</li>
+                    </ul>
+
+                    <h4>Homogeneous Division</h4>
+                    <p>If the result P' = (x', y', w')ᵀ has w' ≠ 1, the actual 2D point is (x'/w', y'/w')</p>
+                </div>
+            </details>
+        </div>
+
+        <!-- Visualization Canvas -->
+        <div class="canvas-section">
+            <h2>Visualization</h2>
+            <p class="canvas-controls">🖱️ Drag to pan • Scroll to zoom</p>
+            <canvas id="canvas" width="800" height="800"></canvas>
+            <p class="canvas-legend">
+                <span class="legend-original">━━</span> Original Rectangle
+                <span class="legend-transformed">━━</span> Transformed Rectangle
+            </p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
